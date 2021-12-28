@@ -3,9 +3,8 @@ from gpiozero import Buzzer
 import time
 
 
-buzzer = Buzzer(4)
-
 def buzz(pitch, duration):
+    buzzer = Buzzer(4)
     period = 1.0 / pitch
     delay = period / 2
     cycles = int(duration * pitch)
