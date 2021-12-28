@@ -11,8 +11,10 @@ GPIO.setup(relay, GPIO.OUT)
 
 GPIO.output(led, GPIO.HIGH)
 
-while True:
+for _ in range(10):
     GPIO.output(relay, GPIO.HIGH)
     time.sleep(0.5)
     GPIO.output(relay, GPIO.LOW)
     time.sleep(0.5)
+
+GPIO.cleanup()
