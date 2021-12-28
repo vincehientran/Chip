@@ -1,20 +1,36 @@
 import RPi.GPIO as GPIO
+from gpiozero import Buzzer
 import time
 
-led = 12
-relay = 11
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(led, GPIO.OUT)
-GPIO.setup(relay, GPIO.OUT)
+buzzer = Buzzer(4)
+
+def buzz(pitch, duration):
+    period = 1.0 / pitch
+    delay = period / 2
+    cycles = int(duration * pitch)
+    buzzer.beep(on_time=period, off_time=period, n=int(cycles/2))
 
 
-GPIO.output(led, GPIO.HIGH)
+def main():
+    led = 12
+    relay = 11
 
-for _ in range(10):
-    GPIO.output(relay, GPIO.HIGH)
-    time.sleep(0.5)
-    GPIO.output(relay, GPIO.LOW)
-    time.sleep(0.5)
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(led, GPIO.OUT)
+    GPIO.setup(relay, GPIO.OUT)
 
-GPIO.cleanup()
+
+    GPIO.output(led, GPIO.HIGH)
+
+    for _ in range(20):
+        GPIO.output(relay, GPIO.HIGH)
+        buzz(float(260), 0.33)
+        time.sleep(0.33)
+        GPIO.output(relay, GPIO.LOW)
+        time.sleep(0.33)
+
+    GPIO.cleanup()
+
+if __name__ == '__main__':
+    main()
