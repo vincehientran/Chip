@@ -2,6 +2,7 @@ from gpiozero import Buzzer, LED, OutputDevice
 
 import cv2 as cv
 import numpy as np
+import threading
 import time
 
 from gpiozero.output_devices import AngularServo
@@ -27,12 +28,13 @@ from gpiozero.output_devices import AngularServo
 #         relay.off()
 #         time.sleep(0.33)
 
-global angle
+global turnConstant, isRunning
 
 def edgeDetection(image):
     grayscale = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-    blur = cv.GaussianBlur(grayscale, (3, 3), 1)
-    cannyEdge = cv.Canny(blur, 20, 50)
+    threshold = cv.adaptiveThreshold(grayscale,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv.THRESH_BINARY,641,7)
+    cannyEdge = cv.Canny(threshold, 15, 30)
     cannyEdge = cv.dilate(cannyEdge, cv.getStructuringElement(cv.MORPH_RECT, (3, 3)), iterations=1)
     return cannyEdge
 
@@ -148,24 +150,41 @@ def removeHorizontal(image):
     return cv.bitwise_and(image, horizontal), horizontal
 
 # aligns the vehicle to the road
-def align(lanes):
+def align(shape, lanes):
     if lanes is not None:
         if len(lanes) == 2:
             slopeLeft = slope(lanes[0])
             slopeRight = slope(lanes[1])
 
             # keep in mind (0,0) is the top left corner and x and y rises down and to the right
-            if slopeLeft > 0 and slopeRight > 0:
-                print('Turn Left')
-            elif slopeLeft < 0 and slopeRight < 0:
-                print('Turn Right')
-            else:
-                if (slopeLeft + slopeRight) > 5.5:
-                    print('Turn Right')
-                elif (slopeLeft + slopeRight) < -5.5:
-                    print('Turn Left')
+            sumSlopeNormalized = -(slopeLeft + slopeRight)
+            
+            x1L, y1L, x2L, y2L = lanes[0]
+            x1R, y1R, x2R, y2R = lanes[1]
+            _, bottomEdgeInterceptLeft = lineParameters(shape, x1L, y1L, x2L, y2L)
+            _, bottomEdgeInterceptRight = lineParameters(shape, x1R, y1R, x2R, y2R)
+            centerOfLane = (bottomEdgeInterceptLeft + bottomEdgeInterceptRight) / 2
+            centerOfImage = (shape[1]/2)
+            difference = (centerOfLane - centerOfImage)
+            if difference > 25:
+                if (slopeLeft > 0 and slopeRight > 0):
+                    return 0
+                elif (slopeLeft < 0 and slopeRight < 0):
+                    return 100 / sumSlopeNormalized
                 else:
-                    print('Go Straight')
+                    return difference / 50
+            elif difference < -25:
+                if (slopeLeft > 0 and slopeRight > 0):
+                    return 100 / sumSlopeNormalized
+                elif (slopeLeft < 0 and slopeRight < 0):
+                    return 0
+                else:
+                    return difference / 50
+            else:
+                if (slopeLeft > 0 and slopeRight > 0) or (slopeLeft < 0 and slopeRight < 0):
+                    return 100 / sumSlopeNormalized
+                else:
+                    return 0
 
             # print(slopeLeft + slopeRight)
 
@@ -186,7 +205,8 @@ def slope(line):
     return (y2 - y1) / (x2 - x1)
 
 def execute(vid):
-    while(True):
+    global turnConstant, isRunning
+    while(isRunning):
         # Capture the video frame
         # by frame
         ret, frame = vid.read()
@@ -200,9 +220,10 @@ def execute(vid):
             if (stop(crosswalk)):
                 print('STOP')
             else:
-                align(lanes)
-            cv.imshow('line', lineImage)
-            cv.imshow('edge', cannyEdge)
+                turnConstant = align(cannyEdge.shape, lanes)
+                print(turnConstant)
+            # cv.imshow('line', lineImage)
+            # cv.imshow('edge', cannyEdge)
             # cv.imshow('crosswalk', crosswalk)
         except:
             continue
@@ -210,19 +231,27 @@ def execute(vid):
         # the 'q' button is set as the
         # quitting button you may use any
         # desired button of your choice
-        if cv.waitKey(1) & 0xFF == ord('q'):
-            break
+        # if cv.waitKey(1) & 0xFF == ord('q'):
+        #     break
 
     # After the loop release the cap object
     vid.release()
     # Destroy all the windows
-    cv.destroyAllWindows()
+    # cv.destroyAllWindows()
 
 def main():
+    global turnConstant, isRunning
+    isRunning = True
     # define a video capture object
     vid = cv.VideoCapture(0)
-    execute(vid)
-    
+
+    t1 = threading.Thread(target=execute, args=(vid,))
+    t1.start()
+
+    userInput = input()
+    while userInput != 'q':
+        userInput = input()
+    isRunning = False
         
 
 if __name__ == '__main__':
