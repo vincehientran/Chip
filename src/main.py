@@ -265,8 +265,14 @@ def main():
 
     mc = MotorControl(25,8,7,17,27,22)
 
-    mc.forward(3)
-    mc.backward(3)
+    mc.forward(3, speed=1)
+    time.sleep(1)
+    mc.forward(3, speed=0.5)
+    time.sleep(1)
+    mc.backward(3, speed=1)
+    time.sleep(1)
+    mc.backward(3, speed=0.5)
+    time.sleep(1)
     mc.turnLeft(1)
     mc.turnRight(1)
     
