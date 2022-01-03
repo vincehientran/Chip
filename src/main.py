@@ -263,12 +263,12 @@ def main():
     #     userInput = input()
     # isRunning = False
 
-    mc = MotorControl(2,3,4,17,27,22)
+    mc = MotorControl(25,8,7,17,27,22)
 
-    mc.forward(10)
-    mc.backward(10)
-    mc.turnLeft(5)
-    mc.turnRight(5)
+    mc.forward(3)
+    mc.backward(3)
+    mc.turnLeft(1)
+    mc.turnRight(1)
     
         
 
