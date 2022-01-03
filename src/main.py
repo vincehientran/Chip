@@ -1,11 +1,13 @@
-from gpiozero import Buzzer, LED, OutputDevice
+from types import ModuleType
+from gpiozero import OutputDevice
 
 import cv2 as cv
+from gpiozero.output_devices import Motor
 import numpy as np
 import threading
 import time
 
-from gpiozero.output_devices import AngularServo
+from MotorControl import MotorControl
 
 # buzzer = Buzzer(4)
 
@@ -239,19 +241,35 @@ def execute(vid):
     # Destroy all the windows
     # cv.destroyAllWindows()
 
+# control the 4 wheels using a steering constant
+def steer(turnConstant):
+    # negative turnConstant means turn left
+    # positive turnConstant means turn right
+    pass
+
+
 def main():
     global turnConstant, isRunning
     isRunning = True
-    # define a video capture object
-    vid = cv.VideoCapture(0)
 
-    t1 = threading.Thread(target=execute, args=(vid,))
-    t1.start()
+    # # define a video capture object
+    # vid = cv.VideoCapture(0)
 
-    userInput = input()
-    while userInput != 'q':
-        userInput = input()
-    isRunning = False
+    # t1 = threading.Thread(target=execute, args=(vid,))
+    # t1.start()
+
+    # userInput = input()
+    # while userInput != 'q':
+    #     userInput = input()
+    # isRunning = False
+
+    mc = MotorControl(2,3,4,17,27,22)
+
+    mc.forward(10)
+    mc.backward(10)
+    mc.turnLeft(5)
+    mc.turnRight(5)
+    
         
 
 if __name__ == '__main__':
