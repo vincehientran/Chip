@@ -253,28 +253,28 @@ def main():
     isRunning = True
 
     # # define a video capture object
-    # vid = cv.VideoCapture(0)
+    vid = cv.VideoCapture(0)
 
-    # t1 = threading.Thread(target=execute, args=(vid,))
-    # t1.start()
+    t1 = threading.Thread(target=execute, args=(vid,))
+    t1.start()
 
-    # userInput = input()
-    # while userInput != 'q':
-    #     userInput = input()
-    # isRunning = False
+    userInput = input()
+    while userInput != 'q':
+        userInput = input()
+    isRunning = False
 
     mc = MotorControl(25,8,7,17,27,22)
 
-    mc.forward(3, speed=1)
-    time.sleep(1)
-    mc.forward(3, speed=0.5)
-    time.sleep(1)
-    mc.backward(3, speed=1)
-    time.sleep(1)
-    mc.backward(3, speed=0.5)
-    time.sleep(1)
-    mc.turnLeft(1)
-    mc.turnRight(1)
+    # mc.forward(3, speed=1)
+    # time.sleep(1)
+    # mc.forward(3, speed=0.5)
+    # time.sleep(1)
+    # mc.backward(3, speed=1)
+    # time.sleep(1)
+    # mc.backward(3, speed=0.5)
+    # time.sleep(1)
+    # mc.turnLeft(1)
+    # mc.turnRight(1)
     
         
 
