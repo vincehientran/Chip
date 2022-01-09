@@ -224,7 +224,7 @@ def execute(vid):
             # else:
             turnConstant = align(cannyEdge.shape, lanes)
             print(turnConstant)
-            cv.imshow('line', cannyEdge)
+            # cv.imshow('line', lineImage)
             # cv.imshow('edge', cannyEdge)
             # cv.imshow('crosswalk', crosswalk)
         except:
@@ -233,6 +233,19 @@ def execute(vid):
         # the 'q' button is set as the
         # quitting button you may use any
         # desired button of your choice
+        if cv.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # After the loop release the cap object
+    vid.release()
+    # Destroy all the windows
+    cv.destroyAllWindows()
+
+def executeTest(vid):
+    global isRunning
+    while isRunning:
+        ret, frame = vid.read()
+        cv.imshow(frame)
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -255,7 +268,7 @@ def main():
     # # define a video capture object
     vid = cv.VideoCapture(0)
 
-    t1 = threading.Thread(target=execute, args=(vid,))
+    t1 = threading.Thread(target=executeTest, args=(vid,))
     t1.start()
 
     userInput = input()
