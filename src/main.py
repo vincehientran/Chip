@@ -245,7 +245,7 @@ def executeTest(vid):
     global isRunning
     while isRunning:
         ret, frame = vid.read()
-        cv.imshow(frame)
+        cv.imshow('video', frame)
         if cv.waitKey(1) & 0xFF == ord('q'):
             break
 
