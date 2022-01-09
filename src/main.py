@@ -224,7 +224,7 @@ def execute(vid):
             # else:
             turnConstant = align(cannyEdge.shape, lanes)
             print(turnConstant)
-            cv.imshow('line', lineImage)
+            cv.imshow('line', cannyEdge)
             # cv.imshow('edge', cannyEdge)
             # cv.imshow('crosswalk', crosswalk)
         except:
@@ -233,13 +233,13 @@ def execute(vid):
         # the 'q' button is set as the
         # quitting button you may use any
         # desired button of your choice
-        # if cv.waitKey(1) & 0xFF == ord('q'):
-        #     break
+        if cv.waitKey(1) & 0xFF == ord('q'):
+            break
 
     # After the loop release the cap object
     vid.release()
     # Destroy all the windows
-    # cv.destroyAllWindows()
+    cv.destroyAllWindows()
 
 # control the 4 wheels using a steering constant
 def steer(turnConstant):
