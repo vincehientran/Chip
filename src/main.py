@@ -216,15 +216,15 @@ def execute(vid):
         # Display the resulting frame
         cannyEdge = edgeDetection(frame)
         mask = regionOfInterest(cannyEdge)
-        mask, crosswalk = removeHorizontal(mask)
+        # mask, crosswalk = removeHorizontal(mask)
         try:
             lineImage, lanes = lineDetection(mask)
-            if (stop(crosswalk)):
-                print('STOP')
-            else:
-                turnConstant = align(cannyEdge.shape, lanes)
-                print(turnConstant)
-            # cv.imshow('line', lineImage)
+            # if (stop(crosswalk)):
+            #     print('STOP')
+            # else:
+            turnConstant = align(cannyEdge.shape, lanes)
+            print(turnConstant)
+            cv.imshow('line', lineImage)
             # cv.imshow('edge', cannyEdge)
             # cv.imshow('crosswalk', crosswalk)
         except:
