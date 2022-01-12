@@ -265,18 +265,47 @@ def main():
     global turnConstant, isRunning
     isRunning = True
 
-    # # define a video capture object
-    vid = cv.VideoCapture(0)
+    # # # define a video capture object
+    # vid = cv.VideoCapture(0)
 
-    t1 = threading.Thread(target=executeTest, args=(vid,))
-    t1.start()
+    # t1 = threading.Thread(target=executeTest, args=(vid,))
+    # t1.start()
 
-    userInput = input()
-    while userInput != 'q':
-        userInput = input()
-    isRunning = False
+    # userInput = input()
+    # while userInput != 'q':
+    #     userInput = input()
+    # isRunning = False
 
     mc = MotorControl(25,8,7,17,27,22)
+    
+    userInput = input()
+    while userInput != 'q':
+        instruction = userInput.split()
+        if len(instruction) == 2:
+            op = instruction[0]
+            duration = instruction[1]
+            if op == 'f':
+                mc.forward(duration, speed=1)
+            elif op == 'b':
+                mc.backward(duration, speed=1)
+            elif op == 'r':
+                mc.turnLeft(duration, speed=1)
+            elif op == 'l':
+                mc.turnLeft(duration, speed=1)
+        elif len(instruction) == 3:
+            op = instruction[0]
+            duration = instruction[1]
+            speed = instruction[2]
+            if op == 'f':
+                mc.forward(duration, speed=speed)
+            elif op == 'b':
+                mc.backward(duration, speed=speed)
+            elif op == 'r':
+                mc.turnLeft(duration, speed=speed)
+            elif op == 'l':
+                mc.turnLeft(duration, speed=speed)
+        userInput = input()
+    isRunning = False
 
     # mc.forward(3, speed=1)
     # time.sleep(1)
