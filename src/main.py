@@ -283,7 +283,7 @@ def main():
         instruction = userInput.split()
         if len(instruction) == 2:
             op = instruction[0]
-            duration = instruction[1]
+            duration = float(instruction[1])
             if op == 'f':
                 mc.forward(duration, speed=1)
             elif op == 'b':
@@ -294,8 +294,8 @@ def main():
                 mc.turnLeft(duration, speed=1)
         elif len(instruction) == 3:
             op = instruction[0]
-            duration = instruction[1]
-            speed = instruction[2]
+            duration = float(instruction[1])
+            speed = float(instruction[2])
             if op == 'f':
                 mc.forward(duration, speed=speed)
             elif op == 'b':
