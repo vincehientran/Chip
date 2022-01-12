@@ -289,7 +289,7 @@ def main():
             elif op == 'b':
                 mc.backward(duration, speed=1)
             elif op == 'r':
-                mc.turnLeft(duration, speed=1)
+                mc.turnRight(duration, speed=1)
             elif op == 'l':
                 mc.turnLeft(duration, speed=1)
         elif len(instruction) == 3:
@@ -301,7 +301,7 @@ def main():
             elif op == 'b':
                 mc.backward(duration, speed=speed)
             elif op == 'r':
-                mc.turnLeft(duration, speed=speed)
+                mc.turnRight(duration, speed=speed)
             elif op == 'l':
                 mc.turnLeft(duration, speed=speed)
         userInput = input()
