@@ -6,4 +6,5 @@ AI for Chip
 pip install SpeechRecognition
 pip install opencv-python
 pip install pyaudio
+pip install pybullet
 ```
