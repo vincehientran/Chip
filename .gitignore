@@ -1,2 +1,3 @@
 v2/res/*
+!v2/res/audio.mp3
 **/__pycache__/*.pyc

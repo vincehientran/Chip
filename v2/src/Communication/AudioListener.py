@@ -40,7 +40,7 @@ class AudioListener:
         logging.basicConfig(level=logging.WARNING)
         self.logger = logging.getLogger(__name__)
 
-    def sound_detected(self):
+    def sound_detected(self) -> bool:
         '''
         Check if sound is currently detected.
 
@@ -52,7 +52,7 @@ class AudioListener:
             self.logger.warning('AudioListener is not listening')
         return self.is_loud.is_set()
 
-    def start_listening(self):
+    def start_listening(self) -> None:
         '''Start listening for audio.'''
 
         if self.is_listening.is_set():
@@ -72,7 +72,7 @@ class AudioListener:
         self.audio_thread.daemon = True
         self.audio_thread.start()
 
-    def stop_listening(self):
+    def stop_listening(self) -> None:
         '''Stop listening for audio.'''
 
         if not self.is_listening.is_set():
@@ -96,7 +96,7 @@ class AudioListener:
         self.p.terminate()
         self.audio_thread.join()
 
-    def __private_capture_audio(self):
+    def __private_capture_audio(self) -> None:
         '''
         Captures and processes the audio. 
         Sets the boolean flag for if audio is detected or not

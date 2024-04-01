@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 import pytest
-from Communication.AudioListener import AudioListener  # Replace 'your_module' with the actual module name
+from Communication.AudioListener import AudioListener
 
 @pytest.fixture
 def audio_listener():
