@@ -4,6 +4,16 @@ import pickle
 import warnings
 
 class Transcriber:
+    '''
+    Transcriber can be used to transcribe an audio file into english text using OpenAi Whisper
+
+    Example:
+    transcriber = Transcriber('tiny.en')
+    print('transcribing')
+    result = transcriber.transcribe('./../../res/audio.mp3')
+    print(result)
+    '''
+
     def __init__(self, modelType: str) -> None:
         '''
         Initialize a Transcriber object with the specified model type.
@@ -59,11 +69,3 @@ class Transcriber:
 
         return self.model.transcribe(path)['text']
 
-def main():
-    transcriber = Transcriber('tiny.en')
-    print('transcribing')
-    result = transcriber.transcribe('./../../res/audio.mp3')
-    print(result)
-
-if __name__ == '__main__':
-    main()

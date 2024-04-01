@@ -6,7 +6,7 @@ import logging
 
 class AudioListener:
     '''
-    AudioListener can be used to detect audio
+    AudioListener can be used to detect audio from microphone using pyaudio
     
     example usage
     al = AudioListener()
