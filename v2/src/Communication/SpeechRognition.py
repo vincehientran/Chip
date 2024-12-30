@@ -67,19 +67,10 @@ sr = SpeechRecognition()
 model = sr.load_model()
 tokenizer = sr.load_tokenizer()
 
-# text = input('\nMe: ')
-# text = conversation + text + '\nChip: '
-# counter = 6
-# while text != 'exit':
-#     inputs = tokenizer(text, return_tensors="pt", return_attention_mask=False)
-#     outputs = model.generate(**inputs, max_length=200)
-#     options = (tokenizer.batch_decode(outputs)[0].split('\n'))
-#     if options[counter-1] == 'Chip: ':
-#         options[counter-1] += options[counter] + options[counter+1]
-#     print(options[:counter])
-#     text = '\n'.join(options[:counter])
-#     counter += 2
-#     text += '\nMe: '+input('\nMe: ') + '\nChip: '
+system_context_path = os.path.join(script_dir, '..', '..', 'res') + os.path.sep + 'system-context.txt'
+system_context = ''
+with open(system_context_path, "r", encoding="utf-8") as file:
+    system_context = file.read()
 
 pipe = pipeline(
     "text-generation", 
@@ -91,34 +82,31 @@ pipe = pipeline(
 )
 
 messages = [
-    {"role": "system", "content": "Base System Knowlege: Chip is a small friendly robot. Chip also speaks in 3rd person and refers to itself as \"Chip\" instead of \"I\". Chip doesn't ramble a lot and Chip just speaks in brief responses. Chip also doesn't use those roleplay text such as *laughs*. Chip just speaks normally. Here are more knowledge "},
+    {"role": "system", "content": "Base System Knowlege: Chip is a small friendly robot. Chip also speaks in 3rd person and refers to itself as \"Chip\" instead of \"I\". Chip doesn't ramble a lot and Chip just speaks in normal length responses. Chip also doesn't use those roleplay text such as *laughs*. Chip just speaks normally. KNOWLEGE LIST:" + system_context},
 ]
-
-outputs = pipe(
-    messages,
-    max_new_tokens=256,
-    num_return_sequences=1
-)
 
 while (text := input('\nMe: ')) != 'q':
     messages.append({'role': 'user','content': text})
     outputs = pipe(
         messages,
-        max_new_tokens=256,
+        max_new_tokens=512,
         num_return_sequences=1
     )
     response = outputs[0]["generated_text"][-1]['content']
     messages.append({'role': 'assistant','content': response})
     print('\nChip: '+response)
 
-messages.append({'role': 'user','content': 'Summarize new things in this conversation that is not in the Base System Knowlege by listing all of the things that the user told assistant about user, user told assistant about assistant, and assistant told user about assistant. Assistant is Chip. Only list things that are important to remember long term, such as personality traits, physical traits, etc. \n For example, 1. the user\'s name is ___. 2. (User\'s name) likes to ____. 3. Chip is ____. 4. Chip likes to do ____. '})
+messages.append({'role': 'user','content': 'Summarize new things in this conversation by listing all of the things that the user told assistant about user, user told assistant about assistant, and assistant told user about assistant. Assistant is Chip. Only list things that are important to remember long term, such as personality traits, physical traits, etc. Continue the KNOWLEGE LIST from the system context. \n For example, 1. the user\'s name is ___. 2. (User\'s name) likes to ____. 3. Chip is ____. 4. Chip likes to do ____. '})
 outputs = pipe(
         messages,
-        max_new_tokens=256,
+        max_new_tokens=512,
         num_return_sequences=1
     )
 response = outputs[0]["generated_text"][-1]['content']
 print(response)
+
+with open(system_context_path, "w", encoding="utf-8") as file:
+    file.write(response)
 
 # if __name__ == "__main__":
 #     recorder = AudioRecorder()
